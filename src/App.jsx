@@ -3,31 +3,63 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import Student from './components/Student'
+import StudentManager from './components/StudentManager'
 
 function App() {
 
-  // dados que poderiam pertencer a uma base de dados ou API
-  const listStudents = [
-    { fullName: 'Joao', ageInYears: 20 },
-    { fullName: 'Diogo', ageInYears: 50 },
-    { fullName: 'Test', ageInYears: 0 },
-    { fullName: 'Ramos', ageInYears: 70 },
-    { fullName: 'Teramos', ageInYears: 59 }
-  ];
+  // variavel de estado(State)
+  const [taskInput, setTaskInput] = useState('');
+  const [taskList, setTaskList] = useState([]);
+  
 
-  // variavel que ira conter o HTML que ira ser visivel no ecra
-  let listStudentsHtml = [];
+  /*
+  const alertValue = (value) => {
+    alert(value);
+  }; 
+  */
 
-  // para cada elemento da lista, um aluno ira ser criado
-  listStudents.forEach(student => {
-    listStudentsHtml.push(<Student name={student.fullName} age={student.ageInYears} />)
-  })
+  // esta função vai adicionar uma tarefa do input para a lista de tarefas
+  const handleAddTask = () => {
+    if(taskInput == ''){
+      alert('Please fill out task');
+      return;
+    }
+
+    // cria uma copia da lista de tarefas~
+    // uma vez que não é possivel faze-lo diretamente
+    let taskAux = [...taskList];
+    // faz-se as mudanças necessaria para a copia do state array
+    taskAux.push(taskInput);
+
+    // atualizamos o state array com a propria copia
+    // agora com uma nova tarefa
+    setTaskList(taskAux);
+
+    // limpa o input
+    setTaskInput("");
+  };
+
+  // faz parse do state array das tarefas, para os elementos html
+  const taskListHtml = taskList.map(task => {
+    return <li>{task}</li>;
+  });
 
   return (
     <>
-      Hello class 3
+      Please insert your task &nbsp;
 
-      {listStudentsHtml}
+      {/**<input value={name} onChange={(evt) => {setName(evt.target.value)}}/>*/}
+      <input value={taskInput} onChange={(evt) => {setTaskInput(evt.target.value)}}/>
+      <br/>
+      <br/>
+      {/**<button onClick={()=>{alertValue(name);}}>Alert the name</button>*/}
+      <button onClick={()=>{handleAddTask();}}>addTask</button>
+      <br/>
+      <ol>
+        {taskListHtml}
+      </ol>
+
+      {/*<StudentManager></StudentManager>*/}
     </>
   )
 }
