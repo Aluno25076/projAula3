@@ -46,20 +46,42 @@ function App() {
 
   return (
     <>
-      Please insert your task &nbsp;
+      <div style={{minHeight: '100vh'}} className='container p-2 bg-secondary-subtle rounded'>
+        <div className='row'>
+          <div className='col-md-6 col-xs-12'>
+            Please insert your task &nbsp;
+          </div>
 
-      {/**<input value={name} onChange={(evt) => {setName(evt.target.value)}}/>*/}
-      <input value={taskInput} onChange={(evt) => {setTaskInput(evt.target.value)}}/>
-      <br/>
-      <br/>
-      {/**<button onClick={()=>{alertValue(name);}}>Alert the name</button>*/}
-      <button onClick={()=>{handleAddTask();}}>addTask</button>
-      <br/>
-      <ol>
-        {taskListHtml}
-      </ol>
+          <div className='col-md-6 col-xs-12'>
 
-      {/*<StudentManager></StudentManager>*/}
+            <input className='form-control' value={taskInput}
+              onChange={(evt) => { setTaskInput(evt.target.value) }} />
+          </div>
+        </div>
+
+
+        <div className='row mt-2'>
+          <div className='col-md-3 col-sm-6 col-xs-12'>
+            <button className='form-control' onClick={() => {
+              handleAddTask();
+            }}>
+              Add task
+            </button>
+          </div>
+
+        </div>
+
+        <br />
+
+        <ol>
+          {taskListHtml}
+        </ol>
+
+
+
+
+        {/**<StudentManager></StudentManager> */}
+      </div>
     </>
   )
 }
