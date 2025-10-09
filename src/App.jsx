@@ -5,6 +5,10 @@ import './App.css'
 import Student from './components/Student'
 import StudentManager from './components/StudentManager'
 
+// Bootstrap Adicionado
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.min.js'
+
 function App() {
 
   // variavel de estado(State)
