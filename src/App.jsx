@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+//import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -15,7 +16,7 @@ function App() {
   // NEVER CHANGE STATE VARIABLES DIRECTLY -> always use the set function
 
   // variavel state do modal
-  const {show, setShow} = useState(false);
+  const [show, setShow] = useState(false);
 
   // variavel state que contem o index da tarefa que estamos a editar
   const [taskInd, setTaskInd] = useState(-1);
