@@ -8,8 +8,8 @@ import StudentManager from './components/StudentManager'
 
 import TodoItem from './components/TodoItem'
 import CreateTodoItem from './components/CreateTodoItem'
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal'
+import Button from 'react-bootstrap/Button'
 import Tarefa from './model/Tarefa'
 
 //é necessario instalar react-bootstrap: npm install react-bootstrap
@@ -61,10 +61,16 @@ function App() {
   };
   */
 
+  /**
+   * Mostra o modal
+   * Antes de o fazer, guarda no state o indice da task e o valor dela
+   * 
+   * @param {*} taskIndex Indice da task a Editar
+   */
   const handleShowModalEdit = (taskIndex) => {
     // copiar o state array de tarefas
     const taskListAux = [...taskList];
-    
+
     // vou ler a tarefa dado o indice
     let taskToShow = new Tarefa();
     taskToShow = taskListAux[taskIndex];
@@ -146,8 +152,9 @@ function App() {
     // limpa a seleção (para o modal que fiz em casa)
     //setTaskToDelete(null);
   } 
-
+  
   const handleEditTask = (index) => {
+    debugger;
     if(index<0 || index>=taskList.length){
       allert("You are introducing an invalid index");
       return;
@@ -158,15 +165,30 @@ function App() {
     // cria uma copia da lista de tarefas~
     // uma vez que não é possivel faze-lo diretamente
     let taskAux = [...taskList];
+
     // faz-se as mudanças necessaria para a copia do state array
-    taskAux.push(taskEditInput);
+    //taskAux.push(taskEditInput);
+    let tarefaObj = taskList[index];
+    tarefaObj.tarefa = taskEditInput;
 
     // atualizamos o state array com a propria copia
     // agora com uma nova tarefa
     setTaskList(taskAux);
-
-    taskAux.splice(index, 1);
   }
+
+  /*
+    #1- guardar a alteração da task concluida
+    #2- a tarefa não mostra o campo concluida
+    #3- ter um butão para concluir a tarefa (envolve passar uma funcao nova...)
+
+    #4- separar a lista 'Por concluir' e 'Concluidas'
+      talvez usar -> .filter((task)=>task.concluida) // antes do map
+  */
+
+  //const HandleCompletionTask(){
+
+
+  //}
 
   // START PHARSING HTML OUTPUT
   //
@@ -187,6 +209,8 @@ function App() {
       */}
   });
 
+  
+  
   
 
   return (
