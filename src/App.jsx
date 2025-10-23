@@ -64,11 +64,13 @@ function App() {
   const handleShowModalEdit = (taskIndex) => {
     // copiar o state array de tarefas
     const taskListAux = [...taskList];
+    
     // vou ler a tarefa dado o indice
-    const taskToShow = taskListAux[taskIndex];
+    let taskToShow = new Tarefa();
+    taskToShow = taskListAux[taskIndex];
 
     // guardar no input do modal de editar tarefa
-    setTaskEditInput(taskToShow);
+    setTaskEditInput(taskToShow.tarefa);
     // guarda numa variavel de estado o indice da task que estamos a alterar
     setTaskIndEdit(taskIndex);
     // altera a variavel de estado ligada ao modal
