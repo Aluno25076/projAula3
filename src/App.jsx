@@ -19,7 +19,8 @@ function App() {
   const [show, setShow] = useState(false);
 
   // variavel state que contem o index da tarefa que estamos a editar
-  const [taskInd, setTaskInd] = useState(-1);
+  const [taskIndEdit, setTaskIndEdit] = useState(-1);
+  const [taskEditInput, setTaskEditInput] = useState('');
   
   // variavel de estado(State)
   // o state da variavel é ligado ao input
@@ -27,6 +28,7 @@ function App() {
 
   // lista de tarefas, que será um array de strings
   const [taskList, setTaskList] = useState([]);
+  
 
   // variavel para selecionar a tarefa a eleminar (para o delete modal que fiz em casa)
   //const [taskToDelete, setTaskToDelete] = useState(null);
@@ -51,9 +53,25 @@ function App() {
   // função que fecha o modal
   const handleClose = () => setShow(false);
 
+  /*
   const handleShow = (taskIndex) => {
-    
+  
     setShow(true)
+  };
+  */
+
+  const handleShowModalEdit = (taskIndex) => {
+    // copiar o state array de tarefas
+    const taskListAux = [...taskList];
+    // vou ler a tarefa dado o indice
+    const taskToShow = taskListAux[taskIndex];
+
+    // guardar no input do modal de editar tarefa
+    setTaskEditInput(taskToShow);
+    // guarda numa variavel de estado o indice da task que estamos a alterar
+    setTaskIndEdit(taskIndex);
+    // altera a variavel de estado ligada ao modal
+    setShow(true);
   };
 
   // esta função vai adicionar uma tarefa do input para a lista de tarefas
@@ -112,16 +130,37 @@ function App() {
     // #3 - atualizar
     setTaskList(taskAux);
 
-    // limpa a seleção
-    setTaskToDelete(null);
+    // limpa a seleção (para o modal que fiz em casa)
+    //setTaskToDelete(null);
   } 
+
+  const handleEditTask = (index) => {
+    if(index<0 || index>=taskList.length){
+      allert("You are introducing an invalid index");
+      return;
+    }
+
+    let idAux = index;
+
+    // cria uma copia da lista de tarefas~
+    // uma vez que não é possivel faze-lo diretamente
+    let taskAux = [...taskList];
+    // faz-se as mudanças necessaria para a copia do state array
+    taskAux.push(taskEditInput);
+
+    // atualizamos o state array com a propria copia
+    // agora com uma nova tarefa
+    setTaskList(taskAux);
+
+    taskAux.splice(index, 1);
+  }
 
   // START PHARSING HTML OUTPUT
   //
   // faz parse do state array das tarefas, para os elementos html
   const taskListHtml = taskList.map((task, ind) => {
     return <TodoItem task={task} ind={ind}
-      handleDeleteTask={handleDeleteTask} handleShow={handleShow} />
+      handleDeleteTask={handleDeleteTask} handleShowModalEdit={handleShowModalEdit} />
     
     {/*
       // o que fiz em casa
@@ -184,7 +223,10 @@ function App() {
                   Task
                 </div>
                 <div className='col-sm-9 col-xs-12'>
-                  <input className='form-control'></input>
+                  <input className='form-control' 
+                    value={taskEditInput}
+                    onChange={(evt)=>{setTaskEditInput(evt.target.value)}}
+                    ></input>
                 </div>
               </div>
             </Modal.Body>
@@ -192,7 +234,7 @@ function App() {
               <Button variant="secondary" onClick={handleClose}>
                 Discard
               </Button>
-              <Button variant="primary" onClick={handleClose}>
+              <Button variant="primary" onClick={() => handleEditTask(taskIndEdit)}>
                 Save Changes
               </Button>
             </Modal.Footer>
