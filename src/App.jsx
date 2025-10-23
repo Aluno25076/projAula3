@@ -6,6 +6,7 @@ import './App.css'
 import Student from './components/Student'
 import StudentManager from './components/StudentManager'
 import TodoItem from './components/TodoItem'
+import CreateTodoItem from './components/CreateTodoItem'
 
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
@@ -28,7 +29,6 @@ function App() {
 
   // lista de tarefas, que será um array de strings
   const [taskList, setTaskList] = useState([]);
-  
 
   // variavel para selecionar a tarefa a eleminar (para o delete modal que fiz em casa)
   //const [taskToDelete, setTaskToDelete] = useState(null);
@@ -179,28 +179,12 @@ function App() {
   return (
     <>
       <div style={{minHeight: '100vh'}} className='container p-2 bg-secondary-subtle rounded'>
-        <div className='row'>
-          <div className='col-md-6 col-xs-12'>
-            Please insert your task &nbsp;
-          </div>
+         {/* CODIGO CRIAR TAREFA - BEGIN */}
+        <CreateTodoItem taskInput={taskInput} setTaskInput={setTaskInput}
+          handleAddTask={handleAddTask}
+        />
 
-          <div className='col-md-6 col-xs-12'>
-
-            <input className='form-control' value={taskInput}
-              onChange={(evt) => { setTaskInput(evt.target.value) }} />
-          </div>
-        </div>
-
-        <div className='row mt-2'>
-          <div className='col-md-3 col-sm-6 col-xs-12'>
-            <button className='form-control' onClick={() => {
-              handleAddTask();
-            }}>
-              Add task
-            </button>
-          </div>
-
-        </div>
+        {/* CODIGO CRIAR TAREFA - END */}
 
         <br />
 
