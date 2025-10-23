@@ -5,11 +5,12 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import Student from './components/Student'
 import StudentManager from './components/StudentManager'
+
 import TodoItem from './components/TodoItem'
 import CreateTodoItem from './components/CreateTodoItem'
-
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import Tarefa from './model/Tarefa'
 
 //é necessario instalar react-bootstrap: npm install react-bootstrap
 
@@ -88,8 +89,18 @@ function App() {
     // cria uma copia da lista de tarefas~
     // uma vez que não é possivel faze-lo diretamente
     let taskAux = [...taskList];
+    console.log(taskAux);
+    // #2- Alterar
+
     // faz-se as mudanças necessaria para a copia do state array
-    taskAux.push(taskInput);
+    // CODIGO ANTIGO, NÃO QUEREMOS ARRAYS
+    //taskAux.push(taskInput);
+
+    let tarefaObj = new Tarefa(taskInput);
+    taskAux.push(tarefaObj);
+
+    // #3- Atualizar
+    console.log(taskAux);
 
     // atualizamos o state array com a propria copia
     // agora com uma nova tarefa
@@ -159,7 +170,7 @@ function App() {
   //
   // faz parse do state array das tarefas, para os elementos html
   const taskListHtml = taskList.map((task, ind) => {
-    return <TodoItem task={task} ind={ind}
+    return <TodoItem key={task.id} task={task} ind={ind}
       handleDeleteTask={handleDeleteTask} handleShowModalEdit={handleShowModalEdit} />
     
     {/*
