@@ -12,7 +12,7 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Tarefa from './model/Tarefa'
 
-import { getTasks } from './api/TodoService'
+import { addTask, getTasks } from './api/TodoService'
 
 //é necessario instalar react-bootstrap: npm install react-bootstrap
 
@@ -36,8 +36,8 @@ function App() {
 
   useEffect(()=>{
     async function fetchData(){
-    const aux = await getTasks();
-    setTaskList(aux);
+      const aux = await getTasks();
+      setTaskList(aux);
     }
 
     fetchData();
@@ -100,6 +100,8 @@ function App() {
    * 
    * @returns nada, apenas altera o state do array
    */
+  /*
+  //descontinuado, sem api
   const handleAddTask = () => {
     if(taskInput == ''){
       alert('Please fill out task');
@@ -129,13 +131,76 @@ function App() {
     // limpa o input
     setTaskInput("");
   };
+  */
 
+  // TAREFA IMPORTANTE
+  // mudar create delete e updata para ser compativel para api
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+ const handleAddTask = async() => {
+    if(taskInput == ''){
+      alert('Please fill out task');
+      return;
+    }
+
+    // adicionar tarefa á lsita
+    let tarefaObj = new Tarefa(taskInput);
+    let aux = await addTask(tarefaObj);
+
+    // atualizar lista
+    aux = await getTasks();
+    setTaskList(aux);
+
+
+    // limpa o input
+    setTaskInput("");
+  };
+
+  //descontinuado
   /**
    * Esta função elemina um elemento do array dado o seu index
    * 
    * @param {*} index - o index do elemento do array
    * @returns nada, apenas altera o state do array
    */
+  /*
+  const handleDeleteTask = (index) =>{
+    if(index<0 || index>=taskList.length){
+      allert("You are introducing an invalid index");
+      return;
+    }
+
+    // cria uma copia da lista de tarefas
+    // podemos faze-lo porque 
+    //let taskToDelete = taskList[index];
+
+    // #1 - copiar/clonar
+
+    // fazer a alteração do array
+    let taskAux = [...taskList];
+
+    // #2 - alterar
+
+    // array.splice recebe:
+    // - o indice onde começa a apagar elementos,
+    // - e recebe o numero de elementos a apagar
+    taskAux.splice(index, 1);
+
+    // #3 - atualizar
+    setTaskList(taskAux);
+
+    // limpa a seleção (para o modal que fiz em casa)
+    //setTaskToDelete(null);
+  } 
+  */
+
   const handleDeleteTask = (index) =>{
     if(index<0 || index>=taskList.length){
       allert("You are introducing an invalid index");
@@ -281,7 +346,7 @@ function App() {
 
         <div className='row mt-4'>
           <div>
-            <h4>Completed Task</h4>
+            <h4>Completed Tasks</h4>
             <ul className='list-group'>
               {taskCompletedListHtml}
             </ul>

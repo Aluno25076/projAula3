@@ -3,9 +3,11 @@ export default class Tarefa{
         this.tarefa=tarefa;
     }
 
-    id = Math.round(Math.random()*1000) + "-" + new Date().getTime();
+    //id = Math.round(Math.random()*1000) + "-" + new Date().getTime(); descontinuado
+    id = 0;
     tarefa = "";
     concluida = false;
     dataCriacao = new Date();
-    dataConcluida = null;
+    dataConcluida = new Date();
+    //dataConcluida = null;  descontinuado
 }
