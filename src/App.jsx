@@ -1,5 +1,5 @@
-//import { useEffect, useState } from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+//import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -12,6 +12,8 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Tarefa from './model/Tarefa'
 
+import { getTasks } from './api/TodoService'
+
 //é necessario instalar react-bootstrap: npm install react-bootstrap
 
 function App() {
@@ -23,6 +25,7 @@ function App() {
   // variavel state que contem o index da tarefa que estamos a editar
   const [taskIndEdit, setTaskIndEdit] = useState(-1);
   const [taskEditInput, setTaskEditInput] = useState('');
+  const [taskCompletion, setTaskCompletion] = useState(false);
   
   // variavel de estado(State)
   // o state da variavel é ligado ao input
@@ -30,6 +33,15 @@ function App() {
 
   // lista de tarefas, que será um array de strings
   const [taskList, setTaskList] = useState([]);
+
+  useEffect(()=>{
+    async function fetchData(){
+    const aux = await getTasks();
+    setTaskList(aux);
+    }
+
+    fetchData();
+  }, []);
 
   // variavel para selecionar a tarefa a eleminar (para o delete modal que fiz em casa)
   //const [taskToDelete, setTaskToDelete] = useState(null);
@@ -154,7 +166,6 @@ function App() {
   } 
   
   const handleEditTask = (index) => {
-    debugger;
     if(index<0 || index>=taskList.length){
       allert("You are introducing an invalid index");
       return;
@@ -185,15 +196,49 @@ function App() {
       talvez usar -> .filter((task)=>task.concluida) // antes do map
   */
 
-  //const HandleCompletionTask(){
+  
+  const handleCompletionTask = (taskIndex) =>{
+    // copiar o state array de tarefas
+    const taskListAux = [...taskList];
 
+    // vou ler a tarefa dado o indice
+    let taskToShow = new Tarefa();
+    taskToShow = taskListAux[taskIndex];
 
-  //}
+    /*
+    if(taskToShow.concluida == false){
+      setTaskCompletion(true);
+    } else {
+      setTaskCompletion(false);
+    }
+      */
+    // guarda numa variavel de estado o indice da task que estamos a alterar
+    setTaskIndEdit(taskIndex);
+    // altera a variavel de estado ligada ao modal
+    setShow(true);
+  }
+  
 
   // START PHARSING HTML OUTPUT
   //
   // faz parse do state array das tarefas, para os elementos html
-  const taskListHtml = taskList.map((task, ind) => {
+  const taskListHtml = taskList.filter((task)=>task.concluida == false).map((task, ind) => {
+    return <TodoItem key={task.id} task={task} ind={ind}
+      handleDeleteTask={handleDeleteTask} handleShowModalEdit={handleShowModalEdit} />
+    
+    {/*
+      // o que fiz em casa
+    <li className='d-flex justify-content-between list-group-item'>
+        {task}
+        <div>
+          <button onClick={() => setTaskToDelete(ind)} className='btn btn-danger form-control data-bs-toggle="modal"' data-bs-toggle="modal" data-bs-target="#DeleteTaskModal">Delete</button>
+        </div>
+
+      </li>;
+      */}
+  });
+
+   const taskCompletedListHtml = taskList.filter((task)=>task.concluida == true).map((task, ind) => {
     return <TodoItem key={task.id} task={task} ind={ind}
       handleDeleteTask={handleDeleteTask} handleShowModalEdit={handleShowModalEdit} />
     
@@ -227,8 +272,18 @@ function App() {
 
         <div className='row mt-4'>
           <div>
+            <h4>TaskList</h4>
             <ul className='list-group'>
               {taskListHtml}
+            </ul>
+          </div>
+        </div>
+
+        <div className='row mt-4'>
+          <div>
+            <h4>Completed Task</h4>
+            <ul className='list-group'>
+              {taskCompletedListHtml}
             </ul>
           </div>
         </div>
