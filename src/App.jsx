@@ -12,7 +12,7 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Tarefa from './model/Tarefa'
 
-import { addTask, deleteTask, getTasks } from './api/TodoService'
+import { addTask, deleteTask, editTask, getTask, getTasks } from './api/TodoService'
 
 //é necessario instalar react-bootstrap: npm install react-bootstrap
 
@@ -24,6 +24,7 @@ function App() {
 
   // variavel state que contem o index da tarefa que estamos a editar
   const [taskIndEdit, setTaskIndEdit] = useState(-1);
+  const [taskEdit, setTaskEdit] = useState('');
   const [taskEditInput, setTaskEditInput] = useState('');
   const [taskCompletion, setTaskCompletion] = useState(false);
   
@@ -73,13 +74,14 @@ function App() {
   };
   */
 
+  //descontinuado
   /**
    * Mostra o modal
    * Antes de o fazer, guarda no state o indice da task e o valor dela
    * 
    * @param {*} taskIndex Indice da task a Editar
    */
-  const handleShowModalEdit = (taskIndex) => {
+  const handleShowModalEdit = (taskIndex, taskSelected) => {
     // copiar o state array de tarefas
     const taskListAux = [...taskList];
 
@@ -91,6 +93,7 @@ function App() {
     setTaskEditInput(taskToShow.tarefa);
     // guarda numa variavel de estado o indice da task que estamos a alterar
     setTaskIndEdit(taskIndex);
+    setTaskEdit(taskSelected);
     // altera a variavel de estado ligada ao modal
     setShow(true);
   };
@@ -210,6 +213,8 @@ function App() {
     setTaskList(aux);
   } 
   
+  // descontinuado
+  /*
   const handleEditTask = (index) => {
     if(index<0 || index>=taskList.length){
       allert("You are introducing an invalid index");
@@ -231,6 +236,18 @@ function App() {
     // agora com uma nova tarefa
     setTaskList(taskAux);
   }
+  */
+
+  const handleEditTask = async(index) => {
+    // atualizar tarefa
+    let tarefaObj = taskList[index];
+    tarefaObj.tarefa = taskEditInput;
+    let aux = await editTask(tarefaObj);
+
+    // atualizar lista
+    aux = await getTasks(taskToEdit);
+    setTaskList(aux);
+  }
 
   /*
     #1- guardar a alteração da task concluida
@@ -241,7 +258,30 @@ function App() {
       talvez usar -> .filter((task)=>task.concluida) // antes do map
   */
 
-  
+  //decontinuado e incompleto
+  /*
+  const handleCompletionTask = (taskIndex) =>{
+    // copiar o state array de tarefas
+    const taskListAux = [...taskList];
+
+    // vou ler a tarefa dado o indice
+    let taskToShow = new Tarefa();
+    taskToShow = taskListAux[taskIndex];
+
+    
+    if(taskToShow.concluida == false){
+      setTaskCompletion(true);
+    } else {
+      setTaskCompletion(false);
+    }
+      
+    // guarda numa variavel de estado o indice da task que estamos a alterar
+    setTaskIndEdit(taskIndex);
+    // altera a variavel de estado ligada ao modal
+    setShow(true);
+  }
+  */
+
   const handleCompletionTask = (taskIndex) =>{
     // copiar o state array de tarefas
     const taskListAux = [...taskList];
@@ -355,7 +395,7 @@ function App() {
               <Button variant="secondary" onClick={handleClose}>
                 Discard
               </Button>
-              <Button variant="primary" onClick={() => handleEditTask(taskIndEdit)}>
+              <Button variant="primary" onClick={() => handleEditTask(taskIndEdit, taskEdit)}>
                 Save Changes
               </Button>
             </Modal.Footer>

@@ -1,7 +1,12 @@
 //testes do servidor: react-class.azurewebsites.net/swagger
 
 export async function getTasks() {
-  const response = await fetch("https://react-class.azurewebsites.net/tasklist");
+  const response = await fetch("https://react-class.azurewebsites.net/api/TodoItemApi", {
+    headers: {
+      Accept: "*/*"
+    }
+  })
+
   if (response.status == 200) {
     const dados = await response.json();
     return dados;
@@ -11,10 +16,10 @@ export async function getTasks() {
 }
 
 export async function addTask(tarefa) {
-  const response = await fetch("https://react-class.azurewebsites.net/task", {
+  const response = await fetch("https://react-class.azurewebsites.net/api/TodoItemApi", {
     body: JSON.stringify(tarefa),
-    headers: {
-      Accept: "*/*",
+      headers: {
+      Accept: "text/plain",
       "Content-Type": "application/json"
     },
     method: "POST"
@@ -29,7 +34,7 @@ export async function addTask(tarefa) {
 }
 
 export async function deleteTask(tarefa) {
-  const response = await fetch("https://react-class.azurewebsites.net/task/"+tarefa.id, {
+  const response = await fetch("https://react-class.azurewebsites.net/api/TodoItemApi/"+tarefa.id, {
     headers: {
       Accept: "*/*"
     },
@@ -44,8 +49,26 @@ export async function deleteTask(tarefa) {
   return null;
 }
 
+export async function  getTask(tarefa) {
+  const response = await fetch("https://react-class.azurewebsites.net/api/TodoItemApi/" + tarefa.id, {
+    body: JSON.stringify(tarefa),
+    headers: {
+      Accept: "*/*",
+      "Content-Type": "application/json"
+    },
+    method: "PUT"
+  })
+
+  if (response.status == 200) {
+      const dados = await response.json();
+      return dados;
+    }
+
+  return null;
+}
+
 export async function editTask(tarefa) {
-    const response = await fetch("https://react-class.azurewebsites.net/task/" + tarefa.id, {
+    const response = await fetch("https://react-class.azurewebsites.net/api/TodoItemApi/" + tarefa.id, {
       body: JSON.stringify(tarefa),
       headers: {
         Accept: "*/*",
