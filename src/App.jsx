@@ -12,7 +12,7 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Tarefa from './model/Tarefa'
 
-import { addTask, getTasks } from './api/TodoService'
+import { addTask, deleteTask, getTasks } from './api/TodoService'
 
 //é necessario instalar react-bootstrap: npm install react-bootstrap
 
@@ -201,33 +201,13 @@ function App() {
   } 
   */
 
-  const handleDeleteTask = (index) =>{
-    if(index<0 || index>=taskList.length){
-      allert("You are introducing an invalid index");
-      return;
-    }
+  const handleDeleteTask = async(taskToDelete) =>{
+    // eleminar item da lista
+    let aux = await deleteTask(taskToDelete);
 
-    // cria uma copia da lista de tarefas
-    // podemos faze-lo porque 
-    //let taskToDelete = taskList[index];
-
-    // #1 - copiar/clonar
-
-    // fazer a alteração do array
-    let taskAux = [...taskList];
-
-    // #2 - alterar
-
-    // array.splice recebe:
-    // - o indice onde começa a apagar elementos,
-    // - e recebe o numero de elementos a apagar
-    taskAux.splice(index, 1);
-
-    // #3 - atualizar
-    setTaskList(taskAux);
-
-    // limpa a seleção (para o modal que fiz em casa)
-    //setTaskToDelete(null);
+    // atualizar lista
+    aux = await getTasks();
+    setTaskList(aux);
   } 
   
   const handleEditTask = (index) => {

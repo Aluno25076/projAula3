@@ -22,7 +22,8 @@ function TodoItem({ task, ind, handleDeleteTask, handleShowModalEdit }) {
                     onClick={()=>{handleShowModalEdit(ind, tarefaAux)}}>
                     Edit
                 </Button>
-                <button onClick={() => { handleDeleteTask(ind) }} className='btn btn-danger'>
+                {/*<button onClick={() => { handleDeleteTask(ind) }} className='btn btn-danger'> */}
+                <button onClick={() => { handleDeleteTask(tarefaAux) }} className='btn btn-danger'>
                     Delete
                 </button>
             </div>
