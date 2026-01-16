@@ -1,3 +1,5 @@
+import Utilizador from "./Utilizador";
+
 export default class Tarefa{
     constructor(tarefa){
         this.tarefa=tarefa;
@@ -9,5 +11,6 @@ export default class Tarefa{
     concluida = false;
     dataCriacao = new Date();
     dataConcluida = new Date();
+    userCriacao = "";
     //dataConcluida = null;  descontinuado
 }

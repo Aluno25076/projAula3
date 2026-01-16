@@ -13,6 +13,9 @@ import Button from 'react-bootstrap/Button'
 import Tarefa from './model/Tarefa'
 
 import { addTask, deleteTask, editTask, getTask, getTasks } from './api/TodoService'
+import { whoAmI, logIn, logOut } from './api/AutenticationService'
+
+import AuthenticationItem from './components/AuthenticationItem'
 
 //é necessario instalar react-bootstrap: npm install react-bootstrap
 
@@ -34,6 +37,10 @@ function App() {
 
   // lista de tarefas, que será um array de strings
   const [taskList, setTaskList] = useState([]);
+
+
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authentication, setAuthentication] = useState(false);
 
   useEffect(()=>{
     async function fetchData(){
@@ -66,6 +73,7 @@ function App() {
 
   // função que fecha o modal
   const handleClose = () => setShow(false);
+  const handleCloseAuthModal = () => setShowAuthModal(false);
 
   /*
   const handleShow = (taskIndex) => {
@@ -73,8 +81,7 @@ function App() {
     setShow(true)
   };
   */
-
-  //descontinuado
+ 
   /**
    * Mostra o modal
    * Antes de o fazer, guarda no state o indice da task e o valor dela
@@ -96,6 +103,12 @@ function App() {
     setTaskEdit(taskSelected);
     // altera a variavel de estado ligada ao modal
     setShow(true);
+  };
+
+  const handleShowAuthModal = () => {
+    
+    // altera a variavel de estado ligada ao modal
+    setShowAuthModal(true);
   };
 
   // esta função vai adicionar uma tarefa do input para a lista de tarefas
@@ -245,7 +258,7 @@ function App() {
     let aux = await editTask(tarefaObj);
 
     // atualizar lista
-    aux = await getTasks(taskToEdit);
+    aux = await getTasks();
     setTaskList(aux);
   }
 
@@ -282,25 +295,22 @@ function App() {
   }
   */
 
-  const handleCompletionTask = (taskIndex) =>{
-    // copiar o state array de tarefas
-    const taskListAux = [...taskList];
-
-    // vou ler a tarefa dado o indice
-    let taskToShow = new Tarefa();
-    taskToShow = taskListAux[taskIndex];
-
-    /*
-    if(taskToShow.concluida == false){
+  //TODO
+  const handleCompletionTask = async (taskIndex, task) => {
+    if(task.concluida == false){
       setTaskCompletion(true);
     } else {
       setTaskCompletion(false);
     }
-      */
-    // guarda numa variavel de estado o indice da task que estamos a alterar
-    setTaskIndEdit(taskIndex);
-    // altera a variavel de estado ligada ao modal
-    setShow(true);
+
+    // atualizar tarefa
+    let tarefaObj = taskList[taskIndex];
+    tarefaObj.concluida = taskCompletion;
+    let aux = await editTask(tarefaObj);
+
+    // atualizar lista
+    aux = await getTasks();
+    setTaskList(aux);
   }
   
 
@@ -309,7 +319,7 @@ function App() {
   // faz parse do state array das tarefas, para os elementos html
   const taskListHtml = taskList.filter((task)=>task.concluida == false).map((task, ind) => {
     return <TodoItem key={task.id} task={task} ind={ind}
-      handleDeleteTask={handleDeleteTask} handleShowModalEdit={handleShowModalEdit} />
+      handleDeleteTask={handleDeleteTask} handleShowModalEdit={handleShowModalEdit} handleCompletionTask={handleCompletionTask} />
     
     {/*
       // o que fiz em casa
@@ -325,7 +335,7 @@ function App() {
 
    const taskCompletedListHtml = taskList.filter((task)=>task.concluida == true).map((task, ind) => {
     return <TodoItem key={task.id} task={task} ind={ind}
-      handleDeleteTask={handleDeleteTask} handleShowModalEdit={handleShowModalEdit} />
+      handleDeleteTask={handleDeleteTask} handleShowModalEdit={handleShowModalEdit} handleCompletionTask={handleCompletionTask} />
     
     {/*
       // o que fiz em casa
@@ -339,21 +349,34 @@ function App() {
       */}
   });
 
-  
+  const AuthenticationHtml = authentication.map(()=>{
+    return <AuthenticationItem handleShowAuthModal={handleShowAuthModal}/>
+  })
   
   
 
   return (
     <>
+
+        
+
       <div style={{minHeight: '100vh'}} className='container p-2 bg-secondary-subtle rounded'>
          {/* CODIGO CRIAR TAREFA - BEGIN */}
         <CreateTodoItem taskInput={taskInput} setTaskInput={setTaskInput}
           handleAddTask={handleAddTask}
         />
+        
+        <AuthenticationItem>
+
+        </AuthenticationItem>
+
 
         {/* CODIGO CRIAR TAREFA - END */}
 
         <br />
+
+        
+        
 
         <div className='row mt-4'>
           <div>
@@ -396,6 +419,34 @@ function App() {
                 Discard
               </Button>
               <Button variant="primary" onClick={() => handleEditTask(taskIndEdit, taskEdit)}>
+                Save Changes
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </>
+
+        <>
+        <Modal show={showAuthModal} onHide={handleCloseAuthModal}>
+            <Modal.Header closeButton>
+              <Modal.Title>Task Edit</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div className='row'>
+                <div className='col-sm-3 col-xs-12'>
+                  Task
+                </div>
+                <div className='col-sm-9 col-xs-12'>
+                  <input className='form-control' 
+                   
+                    ></input>
+                </div>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleCloseAuthModal}>
+                Discard
+              </Button>
+              <Button variant="primary" >
                 Save Changes
               </Button>
             </Modal.Footer>
